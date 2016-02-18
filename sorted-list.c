@@ -7,7 +7,7 @@ SortedListPtr SLCreate(CompareFuncT cf, DestructFuncT df)
     SortedListPtr list = (SortedListPtr)malloc(sizeof(SortedListPtr));
     list->head = NULL;
     list->compare = cf;
-    lsit->destroy = df;
+    list->destroy = df;
 }
 
 void SLDestroy(SortedListPtr list)
