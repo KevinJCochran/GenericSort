@@ -12,28 +12,55 @@ SortedListPtr SLCreate(CompareFuncT cf, DestructFuncT df)
 
 void SLDestroy(SortedListPtr list)
 {
-    return 0;
 }
 
 int SLInsert(SortedListPtr list, void *newObj)
 {
-    /*
-    ListNode newNode = {0,newObj,NULL};
-    ListNode prevNode = list->head;
-    compareValue = 0;
-    while(node->next != NULL)
+    ListNodePtr newNode = (ListNodePtr)malloc(sizeof(ListNodePtr));
+    newNode->refCount = 1;
+    newNode->data = newObj;
+    newNode->next = NULL;
+    ListNodePtr currentNode = list->head;
+    ListNodePtr prevNode = list->head;
+    int compareValue = list->compare(currentNode->data,newObj);
+
+    //Check if list is empty:
+    if(currentNode == NULL)
     {
-        compareValue = list->compare(node->data,newObj);
+        list->head = newNode;
+        return 1;
+    }
+    
+    //Check if newNode belongs in front of list
+    if(compareValue < 0)
+    {
+        newNode = list->head;
+        list->head = newNode;
+        return 1;
+    }
+
+    //Step current node one forward from prev node
+    currentNode = currentNode->next;
+
+    //Check if newNode belongs in middle of list
+    while(currentNode->next != NULL)
+    {
+        currentNode = currentNode->next;
+        compareValue = list->compare(currentNode->data,newObj);
         if(compareValue > 0)
         {
-            node = node->next;
+            prevNode = currentNode;
         }
         else if(compareValue < 0)
         {
-            
+            prevNode->next = newNode;
+            newNode->next = currentNode;
+            return 1;
         }
     }
-    */
+
+    //newNode belongs at end of list
+    currentNode->next = newNode;
     return 1;
 }
 
@@ -51,7 +78,6 @@ SortedListIteratorPtr SLCreateIterator(SortedListPtr list)
 
 void SLDestroyIterator(SortedListIteratorPtr iter)
 {
-    return 
 }
 
 
