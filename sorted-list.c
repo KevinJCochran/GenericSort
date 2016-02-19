@@ -16,10 +16,12 @@ void SLDestroy(SortedListPtr list)
 
 int SLInsert(SortedListPtr list, void *newObj)
 {
+    //initialize the new node
     ListNodePtr newNode = (ListNodePtr)malloc(sizeof(ListNodePtr));
     newNode->refCount = 1;
     newNode->data = newObj;
     newNode->next = NULL;
+
     ListNodePtr currentNode = list->head;
     ListNodePtr prevNode = list->head;
     int compareValue = list->compare(currentNode->data,newObj);
