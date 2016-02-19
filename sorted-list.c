@@ -12,6 +12,7 @@ SortedListPtr SLCreate(CompareFuncT cf, DestructFuncT df)
 
 void SLDestroy(SortedListPtr list)
 {
+
 }
 
 int SLInsert(SortedListPtr list, void *newObj)
@@ -41,9 +42,6 @@ int SLInsert(SortedListPtr list, void *newObj)
         return 1;
     }
 
-    //Step current node one forward from prev node
-    currentNode = currentNode->next;
-
     //Check if newNode belongs in middle of list
     while(currentNode->next != NULL)
     {
@@ -53,7 +51,7 @@ int SLInsert(SortedListPtr list, void *newObj)
         {
             prevNode = currentNode;
         }
-        else if(compareValue < 0)
+        else if(compareValue <= 0)
         {
             prevNode->next = newNode;
             newNode->next = currentNode;
@@ -68,7 +66,48 @@ int SLInsert(SortedListPtr list, void *newObj)
 
 int SLRemove(SortedListPtr list, void *newObj)
 {
-    return 1;
+    ListNodePtr currentNode = list->head;
+    ListNodePtr prevNode = list->head;
+    int compareValue = list->compare(currentNode->data,newObj);
+
+    //Check if list is empty:
+    if(currentNode == NULL)
+    {
+        return -1;
+    }
+    
+    //Check if Obj is first node
+    if(compareValue == 0)
+    {
+        prevNode->next = currentNode->next;
+        list->destroy(currentNode->data);
+        free(currentNode);
+        return 1;
+    }
+
+    //Check if Obj is in middle of list
+    while(currentNode->next != NULL)
+    {
+        currentNode = currentNode->next;
+        compareValue = list->compare(currentNode->data,newObj);
+        if(compareValue > 0)
+        {
+            prevNode = currentNode;
+        }
+        else if(compareValue == 0)
+        {
+            prevNode->next = currentNode->next;
+            list->destroy(currentNode->data);
+            free(currentNode);
+            return 1;
+        }
+        else if(compareValue < 0)
+        {
+            return -2;
+        }
+    }
+    //SLRemove could not find Obj
+    return -2;
 }
 
 
