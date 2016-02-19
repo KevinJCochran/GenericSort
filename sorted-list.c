@@ -12,7 +12,34 @@ SortedListPtr SLCreate(CompareFuncT cf, DestructFuncT df)
 
 void SLDestroy(SortedListPtr list)
 {
+    ListNodePtr currentNode = list->head;
+    ListNodePtr prevNode = list->head;
 
+    //Check if list is empty
+    if(currentNode == NULL)
+    {
+        return;
+    }
+    
+    //Empty list from tail to head
+    while(list->head != NULL)
+    {
+        while(currentNode->next != NULL)
+        {
+            prevNode = currentNode;
+            currentNode = currentNode->next;   
+        }
+        list->destroy(currentNode->data);
+        currentNode = prevNode;
+        free(currentNode->next);
+        currentNode->next = NULL;
+        currentNode = list->head;
+        prevNode = list->head;
+    }
+
+    //Free the list ptr once list is empty
+    free(list);
+    return;
 }
 
 int SLInsert(SortedListPtr list, void *newObj)
