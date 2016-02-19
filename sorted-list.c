@@ -143,18 +143,41 @@ int SLRemove(SortedListPtr list, void *newObj)
 
 SortedListIteratorPtr SLCreateIterator(SortedListPtr list)
 {
-    return NULL;
+   //create a pointer to the linkedlist
+   SortedListIteratorPtr list = malloc(sizeof(SortedListIteratorPtr));
+   list->head = list->head->next;
+   list->finish = NULL;
+
+   return list;
 }
 
 
 void SLDestroyIterator(SortedListIteratorPtr iter)
 {
+   free(iter);
 }
 
 
 void * SLNextItem(SortedListIteratorPtr iter)
 {
+    //have a refcount counter to add one verytime we use
+    //iterator on a node
+    int size = 0;
 
+    ListNodePtr currentNode = list->head;
+    ListNodePtr prevNode = list->head;
+
+    while(currentNode->data != NULL)
+    {
+       size++;
+       currentNode = list->next;
+    }
+    currentNode = currentNode->next ; 
+   
+    if(currentNode == NULL)
+    {
+      return NULL;   
+    }
 }
 
 
