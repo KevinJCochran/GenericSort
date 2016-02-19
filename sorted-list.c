@@ -107,8 +107,11 @@ int SLRemove(SortedListPtr list, void *newObj)
     if(compareValue == 0)
     {
         prevNode->next = currentNode->next;
-        list->destroy(currentNode->data);
-        free(currentNode);
+        if(currentNode->refCount <= 1)
+        {
+            list->destroy(currentNode->data);
+            free(currentNode);
+        }
         return 1;
     }
 
