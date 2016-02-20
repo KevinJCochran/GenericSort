@@ -5,6 +5,7 @@
 SortedListPtr SLCreate(CompareFuncT cf, DestructFuncT df)
 {
     SortedListPtr list = (SortedListPtr)malloc(sizeof(SortedListPtr));
+    //check malloc success 
     list->head = NULL;
     list->compare = cf;
     list->destroy = df;
@@ -65,7 +66,7 @@ int SLInsert(SortedListPtr list, void *newObj)
     if(compareValue < 0)
     {
         newNode = list->head;
-        list->head = newNode;
+        list->head = newNode; //is this line needed?
         return 1;
     }
 
@@ -143,12 +144,14 @@ int SLRemove(SortedListPtr list, void *newObj)
 
 SortedListIteratorPtr SLCreateIterator(SortedListPtr list)
 {
+   ListNodePtr->refCount = (ListNodePtr->refCount) + 1; 
+   
    //create a pointer to the linkedlist
-   SortedListIteratorPtr list = malloc(sizeof(SortedListIteratorPtr));
-   list->head = list->head->next;
-   list->finish = NULL;
+   SortedListIteratorPtr it = (SortedListIteratorPtr)malloc(sizeof(SortedListIteratorPtr));
+   it->head = it->head->next;
+   it->finish = 0;
 
-   return list;
+   return it;
 }
 
 
@@ -163,6 +166,7 @@ void * SLNextItem(SortedListIteratorPtr iter)
     //have a refcount counter to add one verytime we use
     //iterator on a node
     int size = 0;
+    
 
     ListNodePtr currentNode = list->head;
     ListNodePtr prevNode = list->head;
@@ -183,5 +187,13 @@ void * SLNextItem(SortedListIteratorPtr iter)
 
 void * SLGetItem( SortedListIteratorPtr iter )
 {
-
+    if(iter->head == NULL)
+    {
+       return NULL;
+    }
+    else
+    {
+       //printf("\nreturn: %d, *(int*) iter->head->element);   
+       return iter->head->data;
+    }
 }
