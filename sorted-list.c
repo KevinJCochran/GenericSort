@@ -166,22 +166,47 @@ void * SLNextItem(SortedListIteratorPtr iter)
       return NULL;   
     }
     
+    //is refCount of node is 0 then remove that node 
+    if((list->head->refCount) == 0) 
+    {
+       free(list->head); //may not need it
+       return 0; 
+    }
+   /* 
     int size = 0;
     
     //ListNodePtr currentNode = list->head;
     //ListNodePtr prevNode = list->head;
+    
     //check the length of the list that SortedListIterator holds
     while(iter->head != NULL)
     {
        size++;
        iter->head = iter->head->next;
     }
+  
+    //void *i = 0;
+    //i = iter->head->refCount; 
+  */ 
+    
+    //decrement refCount 
+    (iter->head)->refCount--;
    
-    if(size != 
-    (list->head)->refCount--; 
+    //advance iterator to next node
     iter->head = iter->head->next;
-    (list->head)->refCount++; 
+    //if next node refCount is zero remove node 
+    if(iter->head->refCount == 0)
+    {
+        free(list->head);
+    }
 
+    //if next node refCount is not zero then increment
+    if(iter->head->refCount != 0)
+    {
+      (list->head)->refCount++; 
+    }
+ 
+    return iter->head->refCount;
 }
 
 
