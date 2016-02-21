@@ -144,44 +144,44 @@ int SLRemove(SortedListPtr list, void *newObj)
 
 SortedListIteratorPtr SLCreateIterator(SortedListPtr list)
 {
-   ListNodePtr->refCount = (ListNodePtr->refCount) + 1; 
-   
    //create a pointer to the linkedlist
    SortedListIteratorPtr it = (SortedListIteratorPtr)malloc(sizeof(SortedListIteratorPtr));
-   it->head = it->head->next;
-   it->finish = 0;
-
+   it->head = list->head;
+   (list->head)->refCount++; //increment refCount since iterator points to node
    return it;
 }
 
 
 void SLDestroyIterator(SortedListIteratorPtr iter)
 {
-   free(iter);
+    free(iter);
 }
 
 
 void * SLNextItem(SortedListIteratorPtr iter)
-{
-    //have a refcount counter to add one verytime we use
-    //iterator on a node
-    int size = 0;
-    
-
-    ListNodePtr currentNode = list->head;
-    ListNodePtr prevNode = list->head;
-
-    while(currentNode->data != NULL)
-    {
-       size++;
-       currentNode = list->next;
-    }
-    currentNode = currentNode->next ; 
-   
-    if(currentNode == NULL)
+{ 
+    //all iterator elements have been iterated through 
+    if(iter->head == NULL)
     {
       return NULL;   
     }
+    
+    int size = 0;
+    
+    //ListNodePtr currentNode = list->head;
+    //ListNodePtr prevNode = list->head;
+    //check the length of the list that SortedListIterator holds
+    while(iter->head != NULL)
+    {
+       size++;
+       iter->head = iter->head->next;
+    }
+   
+    if(size != 
+    (list->head)->refCount--; 
+    iter->head = iter->head->next;
+    (list->head)->refCount++; 
+
 }
 
 
