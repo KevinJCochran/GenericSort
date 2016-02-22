@@ -139,7 +139,17 @@ int SLRemove(SortedListPtr list, void *newObj)
     //SLRemove could not find Obj
     return -2;
 }
+void SLPrintList(SortedListPtr list)
+{
+    ListNode node = list->head;
+    int i = 1;
 
+    while(node != NULL)
+    {
+        printf("%d: refCount=%d data=%d",i,node->refCount,*(node->data));
+        i++;
+    }
+}
 
 SortedListIteratorPtr SLCreateIterator(SortedListPtr list)
 {
