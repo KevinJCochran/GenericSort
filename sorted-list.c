@@ -142,14 +142,15 @@ int SLRemove(SortedListPtr list, void *newObj)
 }
 void SLPrintList(SortedListPtr list)
 {
-    ListNode node = list->head;
+    ListNodePtr node = list->head;
     int i = 1;
 
     while(node != NULL)
     {
-        printf("%d: refCount=%d data=%d",i,node->refCount,*(node->data));
+        printf("%d: refCount=%d dataAdd=%d\n",i,node->refCount,node->data);
         i++;
     }
+    return;
 }
 
 SortedListIteratorPtr SLCreateIterator(SortedListPtr list)
