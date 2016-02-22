@@ -5,6 +5,7 @@
 SortedListPtr SLCreate(CompareFuncT cf, DestructFuncT df)
 {
     SortedListPtr list = (SortedListPtr)malloc(sizeof(SortedListPtr));
+    //check malloc success 
     list->head = NULL;
     list->compare = cf;
     list->destroy = df;
@@ -65,7 +66,7 @@ int SLInsert(SortedListPtr list, void *newObj)
     if(compareValue < 0)
     {
         newNode = list->head;
-        list->head = newNode;
+        list->head = newNode; //is this line needed?
         return 1;
     }
 
@@ -154,44 +155,80 @@ void SLPrintList(SortedListPtr list)
 SortedListIteratorPtr SLCreateIterator(SortedListPtr list)
 {
    //create a pointer to the linkedlist
-   SortedListIteratorPtr list = malloc(sizeof(SortedListIteratorPtr));
-   list->head = list->head->next;
-   list->finish = NULL;
-
-   return list;
+   SortedListIteratorPtr it = (SortedListIteratorPtr)malloc(sizeof(SortedListIteratorPtr));
+   it->head = list->head;
+   (list->head)->refCount++; //increment refCount since iterator points to node
+   return it;
 }
 
 
 void SLDestroyIterator(SortedListIteratorPtr iter)
 {
-   free(iter);
+    free(iter);
 }
 
 
 void * SLNextItem(SortedListIteratorPtr iter)
-{
-    //have a refcount counter to add one verytime we use
-    //iterator on a node
-    int size = 0;
-
-    ListNodePtr currentNode = list->head;
-    ListNodePtr prevNode = list->head;
-
-    while(currentNode->data != NULL)
-    {
-       size++;
-       currentNode = list->next;
-    }
-    currentNode = currentNode->next ; 
-   
-    if(currentNode == NULL)
+{ 
+    //all iterator elements have been iterated through 
+    if(iter->head == NULL)
     {
       return NULL;   
     }
+    
+    //is refCount of node is 0 then remove that node 
+    if((list->head->refCount) == 0) 
+    {
+       free(list->head); //may not need it
+       return 0; 
+    }
+   /* 
+    int size = 0;
+    
+    //ListNodePtr currentNode = list->head;
+    //ListNodePtr prevNode = list->head;
+    
+    //check the length of the list that SortedListIterator holds
+    while(iter->head != NULL)
+    {
+       size++;
+       iter->head = iter->head->next;
+    }
+  
+    //void *i = 0;
+    //i = iter->head->refCount; 
+  */ 
+    
+    //decrement refCount 
+    (iter->head)->refCount--;
+   
+    //advance iterator to next node
+    iter->head = iter->head->next;
+    //if next node refCount is zero remove node 
+    if(iter->head->refCount == 0)
+    {
+        free(list->head);
+    }
+
+    //if next node refCount is not zero then increment
+    if(iter->head->refCount != 0)
+    {
+      (list->head)->refCount++; 
+    }
+ 
+    return iter->head->refCount;
 }
 
 
 void * SLGetItem( SortedListIteratorPtr iter )
 {
-
+    if(iter->head == NULL)
+    {
+       return NULL;
+    }
+    else
+    {
+       //printf("\nreturn: %d, *(int*) iter->head->element);   
+       return iter->head->data;
+    }
 }
