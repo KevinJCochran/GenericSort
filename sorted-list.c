@@ -140,6 +140,8 @@ int SLRemove(SortedListPtr list, void *newObj)
     //SLRemove could not find Obj
     return -2;
 }
+
+//Prints list assuming data is of type int (for testing).
 void SLPrintList(SortedListPtr list)
 {
     ListNodePtr node = list->head;
