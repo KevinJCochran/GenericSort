@@ -46,6 +46,8 @@ int main(int argc, char ** argv)
         printf("check %d: %d\n",i,check);
     }
 
+    SLPrintList(myList);
+
     printf("\n=====Removal=====\n");
 
     int * testNum = &x;
@@ -60,6 +62,8 @@ int main(int argc, char ** argv)
     *testNum = 9;
     check = SLRemove(myList,(void*)testNum);
     printf("check: %d\n",check);
+
+    SLPrintList(myList);
 
     printf("\n=====PrintList=====\n");
 

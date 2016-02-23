@@ -107,7 +107,7 @@ int SLRemove(SortedListPtr list, void *newObj)
     //Check if Obj is first node
     if(compareValue == 0)
     {
-        prevNode->next = currentNode->next;
+        list->head = currentNode->next;
         if(currentNode->refCount <= 1)
         {
             list->destroy(currentNode->data);
@@ -147,7 +147,8 @@ void SLPrintList(SortedListPtr list)
 
     while(node != NULL)
     {
-        printf("%d: refCount=%d dataAdd=%d\n",i,node->refCount,node->data);
+        printf("%d: %d\n",i,*((int*)node->data));
+        node = node->next;
         i++;
     }
     return;
