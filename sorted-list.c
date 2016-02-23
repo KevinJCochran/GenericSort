@@ -53,7 +53,6 @@ int SLInsert(SortedListPtr list, void *newObj)
 
     ListNodePtr currentNode = list->head;
     ListNodePtr prevNode = list->head;
-    int compareValue = list->compare(currentNode->data,newObj);
 
     //Check if list is empty:
     if(currentNode == NULL)
@@ -63,9 +62,10 @@ int SLInsert(SortedListPtr list, void *newObj)
     }
     
     //Check if newNode belongs in front of list
+    int compareValue = list->compare(currentNode->data,newObj);
     if(compareValue < 0)
     {
-        newNode = list->head;
+        newNode->next = list->head;
         list->head = newNode; //is this line needed?
         return 1;
     }
@@ -170,6 +170,7 @@ SortedListIteratorPtr SLCreateIterator(SortedListPtr list)
 
 void SLDestroyIterator(SortedListIteratorPtr iter)
 {
+    (iter->node)->refCount--; 
     free(iter);
 }
 
@@ -182,47 +183,35 @@ void * SLNextItem(SortedListIteratorPtr iter)
       return NULL;   
     }
     
-    //is refCount of node is 0 then remove that node 
-    if((iter->node->refCount) == 0) 
-    {
-       free(iter->node); //may not need it
-       return 0; 
-    }
-   /* 
-    int size = 0;
-    
-    //ListNodePtr currentNode = list->head;
-    //ListNodePtr prevNode = list->head;
-    
-    //check the length of the list that SortedListIterator holds
-    while(iter->head != NULL)
-    {
-       size++;
-       iter->head = iter->head->next;
-    }
-  
-    //void *i = 0;
-    //i = iter->head->refCount; 
-  */ 
-    
     //decrement refCount 
     (iter->node)->refCount--;
    
-    //advance iterator to next node
-    iter->node = iter->node->next;
-    //if next node refCount is zero remove node 
-    if(iter->node->refCount == 0)
+    if(iter->node->refCount<=1)
     {
-        free(iter->node);
+        ListNodePtr currentNode = iter->node;
+        ListNodePtr prevNode = iter->node;
+        
+        //advance iterator to next node
+        currentNode = iter->node->next;
+        if(currentNode == NULL)
+        {
+            return NULL;
+        }
+        free(prevNode);
+
+        return currentNode;
     }
 
-    //if next node refCount is not zero then increment
-    if(iter->node->refCount != 0)
+    //advance iterator to next node
+    iter->node = iter->node->next;
+    if(iter->node == NULL)
     {
-      (iter->node)->refCount++; 
+        return NULL;
     }
- 
-    return iter->node->next;
+    //increment new node by refCount by 1
+    (iter->node)->refCount++;
+        
+    return iter->node;
 }
 
 
