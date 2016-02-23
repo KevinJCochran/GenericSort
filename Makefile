@@ -1,5 +1,8 @@
-all: main.c sorted-list.o
-	gcc -o main main.c sorted-list.o
+all: main.c libsl.a
+	gcc -o sl main.c libsl.a
+
+libsl.a: sorted-list.o
+	ar r libsl.a sorted-list.o
 
 sorted-list.o: sorted-list.c sorted-list.h
 	gcc -c sorted-list.c

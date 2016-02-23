@@ -1,0 +1,19 @@
+We plan to test with integers.
+
+An array is filled with numbers 0-9 in a random order.
+The array is then fed as input to the SLInsert function.
+The array is structured in a way such that integers
+must be inserted into the front, middle and end of the list.
+
+To test SLRemove, elements from the beginning middle and front
+of the list are removed.
+
+An iterator is then created to walk through the list and
+print the data at each node.
+
+The iterator and list are then destroyed with 
+SLDestroy and SLDestroyIterator.
+
+Throughout the testing, the list will be printed by SLPrintList
+which is a function only capable of printing integers and
+should only be used for testing.
