@@ -159,6 +159,7 @@ SortedListIteratorPtr SLCreateIterator(SortedListPtr list)
    //create a pointer to the linkedlist
    SortedListIteratorPtr it =(SortedListIteratorPtr)malloc(sizeof(SortedListIteratorPtr));
    it->node = list->head;
+   it->list = list;
    if(it->node == NULL)
    {
        return it;
@@ -171,7 +172,6 @@ SortedListIteratorPtr SLCreateIterator(SortedListPtr list)
 
 void SLDestroyIterator(SortedListIteratorPtr iter)
 {
-    (iter->node)->refCount--; 
     free(iter);
 }
 
@@ -183,36 +183,18 @@ void * SLNextItem(SortedListIteratorPtr iter)
     {
       return NULL;   
     }
-    
-    //decrement refCount 
-    (iter->node)->refCount--;
-   
-    if(iter->node->refCount<=1)
-    {
-        ListNodePtr currentNode = iter->node;
-        ListNodePtr prevNode = iter->node;
-        
-        //advance iterator to next node
-        currentNode = iter->node->next;
-        if(currentNode == NULL)
-        {
-            return NULL;
-        }
-        free(prevNode);
+    ListNodePtr dNode = iter->node;
 
-        return currentNode;
-    }
 
-    //advance iterator to next node
+   //advance iterator to next node
     iter->node = iter->node->next;
-    if(iter->node == NULL)
+   //(iter->node)->refCount++;
+    if(dNode->refCount <= 1)
     {
-        return NULL;
+        iter->list->destroy(dNode->data);
+        free(dNode);
     }
-    //increment new node by refCount by 1
-    (iter->node)->refCount++;
-        
-    return iter->node;
+    return (iter->node);
 }
 
 
@@ -224,7 +206,6 @@ void * SLGetItem( SortedListIteratorPtr iter )
     }
     else
     {
-       //printf("\nreturn: %d, *(int*) iter->head->element);   
        return iter->node->data;
     }
 }

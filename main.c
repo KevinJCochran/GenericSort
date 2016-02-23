@@ -73,8 +73,9 @@ int main(int argc, char ** argv)
     for(i = 0; i < 15; i++)
     {
         data = (int*)SLGetItem(itr);
+       printf("Data%d: %d\n",i,*data);
         SLNextItem(itr);
-        printf("Data%d: %d\n",i,*data);
+        
     }
     return 0;
 

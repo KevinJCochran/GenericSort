@@ -127,7 +127,8 @@ void SLPrintList(SortedListPtr list);
  */
 struct SortedListIterator
 {
-   ListNodePtr node; 
+   ListNodePtr node;
+   SortedListPtr list;
 };
 typedef struct SortedListIterator* SortedListIteratorPtr;
 
